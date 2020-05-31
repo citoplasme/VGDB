@@ -1,4 +1,4 @@
-# CLAV2019: interface web do  projeto "Classificação e Avaliação da Informação Pública"
+# Video Game Database Interface
 
 ## Project setup
 ```
