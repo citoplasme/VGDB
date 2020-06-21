@@ -237,6 +237,12 @@
             @click="adicionar"
             >Add to Favorites</v-btn
           >
+          <v-btn
+            v-if="itemsContains(this.idGame) && this.$store.state.name != ''"
+            class="red accent-4 white--text mr-4"
+            @click="remover"
+            >Remove from Favorites</v-btn
+          >
         </v-col>
       </v-row>
     </v-card-text>
@@ -310,16 +316,55 @@ export default {
           this.text = "Game added to favorites.";
           this.color = "success";
           this.snackbar = true;
-          this.favorites.push(this.idGame);
+          this.done = true;
+          this.getFavorites();
+          //this.favorites.push(this.idGame);
         })
         .catch(e => {
           this.text = e.response.data;
           this.color = "error";
           this.snackbar = true;
+          this.done = false;
         });
     },
+    //fecharSnackbar() {
+    //  this.snackbar = false;
+    //},
+
     fecharSnackbar() {
       this.snackbar = false;
+      if (this.done == true) this.getFavorites();
+    },
+    preparaLista(listaNoticias) {
+      let myTree = [];
+      for (let i = 0; i < listaNoticias.length; i++) {
+        myTree.push(listaNoticias[i].id);
+      }
+      return myTree;
+    },
+    async getFavorites() {
+      try {
+        let favs = await this.$request("get", "/users/favorites");
+        this.favorites = await this.preparaFavs(favs.data);
+      } catch (e) {
+        return e;
+      }
+    },
+    remover() {
+      this.$request("delete", "/users/favorites/" + this.idGame)
+        .then(res => {
+          this.text = res.data;
+          this.color = "success";
+          this.snackbar = true;
+          this.done = true;
+          this.getFavorites();
+        })
+        .catch(e => {
+          this.text = e.response.data;
+          this.color = "error";
+          this.snackbar = true;
+          this.done = false;
+        });
     }
   },
   created: async function() {
