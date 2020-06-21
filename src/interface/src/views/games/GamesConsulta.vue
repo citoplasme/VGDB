@@ -276,7 +276,7 @@ export default {
     color: "",
     timeout: 4000,
     favorites: [],
-    done : false
+    done: false
   }),
   methods: {
     go: function(url) {
